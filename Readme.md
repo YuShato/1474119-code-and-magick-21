@@ -1,7 +1,7 @@
 # Учебный проект «Код и Магия» [![Build status][travis-image]][travis-url]
 
 * Студент: [Юлия Шатохина](https://up.htmlacademy.ru/javascript/21/user/1474119).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Толстоног](https://htmlacademy.ru/profile/id620625).
 
 ---
 
