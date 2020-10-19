@@ -25,7 +25,9 @@ const setupOpen = document.querySelector(`.setup-open`);
 const setupClose = userDialog.querySelector(`.setup-close`);
 const coatColorInput = userDialog.querySelector(`.coat-color`);
 const eyesColorInput = userDialog.querySelector(`.eyes-color`);
-
+const setupWizardForm = document.querySelector(`.setup-wizard-form`);
+setupWizardForm.action = `https://javascript.pages.academy/code-and-magick`;
+userNameInput.required = true;
 
 const getRandomItem = function (myArray) {
   return myArray[Math.floor(Math.random() * myArray.length)];
@@ -39,7 +41,7 @@ const setWizardData = function (array1, array2, elem) {
   elem.textContent = `${getRandomItem(array1)} ${getRandomItem(array2)}`;
 };
 
-let renderWizard = () => {
+let renderWizard = function () {
   let wizardElement = similarWizardTemplate.cloneNode(true);
   let wizardName = wizardElement.querySelector(`.setup-similar-label`);
   let wizardEyes = wizardElement.querySelector(`.wizard-eyes`);
@@ -85,8 +87,9 @@ const changeColorValue = function (elem, array, input) {
 };
 
 const setRandomColorStyle = function (elem, array, input) {
-  elem.style.backgroundColor = getRandomItem(array);
-  input.value = elem.style.backgroundColor;
+  let currentColor = getRandomItem(array);
+  elem.style.backgroundColor = currentColor;
+  input.value = currentColor;
 };
 
 addAllWizards(wizardAmount);
