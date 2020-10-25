@@ -10,6 +10,7 @@
   form.addEventListener(`submit`, function (evt) {
     window.backend.save(new FormData(form), function () {
       userDialog.classList.add(`hidden`);
+      createUserMessage(`green`, `Данные отправлены :)`);
     });
     evt.preventDefault();
   });
@@ -44,16 +45,20 @@
     userDialog.querySelector(`.setup-similar`).classList.remove(`hidden`);
   };
 
-  const errorHandler = function (errorMessage) {
-    const nodeError = document.createElement(`div`);
-    nodeError.style = `z-index: 100; margin: 0 auto; text-align: center; background-color: red;`;
-    nodeError.style.position = `absolute`;
-    nodeError.style.left = 0;
-    nodeError.style.right = 0;
-    nodeError.style.fontSize = `30px`;
+  const createUserMessage = function (color, userMessage) {
+    const node = document.createElement(`div`);
+    node.style = `z-index: 100; margin: 0 auto; text-align: center; background-color: ${color};`;
+    node.style.position = `absolute`;
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = `30px`;
 
-    nodeError.textContent = errorMessage;
-    document.body.insertAdjacentElement(`afterbegin`, nodeError);
+    node.textContent = userMessage;
+    document.body.insertAdjacentElement(`afterbegin`, node);
+  };
+
+  const errorHandler = function (errorMessage) {
+    createUserMessage(`red`, errorMessage);
   };
 
   window.backend.load(successHandler, errorHandler);
