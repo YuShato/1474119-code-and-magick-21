@@ -1,14 +1,10 @@
 'use strict';
 
-const wizardAmount = 4;
 const setupChosenWisard = document.querySelector(`.setup-wizard`);
 const setupChosenWisardCoat = setupChosenWisard.querySelector(`.wizard-coat`);
 const setupChosenWisardEyes = setupChosenWisard.querySelector(`.wizard-eyes`);
 const coatColorInput = document.querySelector(`.coat-color`);
 const eyesColorInput = document.querySelector(`.eyes-color`);
-
-window.renderWizard.addAllWizards(wizardAmount);
-window.renderWizard.showSimilarSetup();
 
 window.popupModule.setupOpenOnKeydown();
 window.popupModule.setupOpenOnClick();
