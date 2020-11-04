@@ -4,10 +4,16 @@
 
   const setupFireball = document.querySelector(`.setup-fireball`);
   const setupFireballInput = document.querySelector(`.fireball-color`);
+  let coatColor = `rgb(101, 137, 164)`;
+  let eyesColor = `black`;
 
-  const coatColor = [`rgb(101, 137, 164)`, `rgb(241, 43, 107)`, `rgb(146, 100, 161)`, `rgb(56, 159, 117)`, `rgb(215, 210, 55)`, `rgb(0, 0, 0)`];
-  const eyesColor = [`black`, `red`, `blue`, `yellow`, `green`];
-  const fireballColors = [`#ee4830`, `#30a8ee`, `#5ce6c0`, `#e848d5`, `#e6e848`];
+  const fireballColors = [
+    `#ee4830`,
+    `#30a8ee`,
+    `#5ce6c0`,
+    `#e848d5`,
+    `#e6e848`
+  ];
 
   const setColorStyle = function (elem, array) {
     elem.style.fill = window.util.getRandomItem(array);
@@ -17,12 +23,28 @@
     elem.textContent = `${window.util.getRandomItem(array1)} ${window.util.getRandomItem(array2)}`;
   };
 
-  const changeColorValue = function (elem, array, input) {
-    elem.addEventListener(`click`, function () {
-      window.colorize.setColorStyle(elem, array);
-      input.value = elem.style.fill;
-    });
+  const getRank = function (wizard) {
+    let rank = 0;
+
+    if (wizard.colorCoat === coatColor) {
+      rank += 2;
+    }
+    if (wizard.colorEyes === eyesColor) {
+      rank += 1;
+    }
+
+    return rank;
   };
+
+  window.wizard.setEyesChangeHandler(function (color) {
+    eyesColor = color;
+    window.debounce(window.renderWizard.updateWizards());
+  });
+
+  window.wizard.setCoatChangeHandler(function (color) {
+    coatColor = color;
+    window.debounce(window.renderWizard.updateWizards());
+  });
 
   const setRandomColorStyle = function (elem, array, input) {
     let currentColor = window.util.getRandomItem(array);
@@ -46,14 +68,12 @@
 
   window.colorize = {
     setWizardData,
-    coatColor,
-    eyesColor,
     fireballColors,
     setColorStyle,
-    changeColorValue,
     setRandomColorStyle,
     fireballColorizeOnKeydown,
-    fireballColorizeOnClick
+    fireballColorizeOnClick,
+    getRank
   };
 
 })();

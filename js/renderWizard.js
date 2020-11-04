@@ -6,6 +6,7 @@
   const form = userDialog.querySelector(`.setup-wizard-form`);
   const MAX_SIMILAR_WIZARD_COUNT = 4;
   const similarWizardTemplate = document.querySelector(`#similar-wizard-template`).content;
+  let wizards = [];
 
   form.addEventListener(`submit`, function (evt) {
     window.backend.save(new FormData(form), function () {
@@ -14,7 +15,6 @@
     });
     evt.preventDefault();
   });
-
 
   const renderWizard = function (wizard) {
     const wizardElement = similarWizardTemplate.cloneNode(true);
@@ -26,23 +26,45 @@
     return wizardElement;
   };
 
-  const successHandler = function (wizards) {
+  const addWizard = function (array) {
+    const fragment = document.createDocumentFragment();
 
-    const addWizard = function (maxCount) {
-      const fragment = document.createDocumentFragment();
-      for (let i = 0; i < maxCount; i++) {
-        fragment.appendChild(renderWizard(wizards[i]));
-      }
-      similarListElement.appendChild(fragment);
-    };
+    const takeNumber = wizards.length > MAX_SIMILAR_WIZARD_COUNT ?
+      MAX_SIMILAR_WIZARD_COUNT :
+      wizards.length;
 
-    if (MAX_SIMILAR_WIZARD_COUNT < wizards.length) {
-      addWizard(MAX_SIMILAR_WIZARD_COUNT);
-    } else {
-      addWizard(wizards.length);
+    similarListElement.innerHTML = ``;
+
+    for (let i = 0; i < takeNumber; i++) {
+      fragment.appendChild(renderWizard(array[i]));
     }
-
+    similarListElement.appendChild(fragment);
     userDialog.querySelector(`.setup-similar`).classList.remove(`hidden`);
+  };
+
+  const namesComparator = function (left, right) {
+    if (left > right) {
+      return 1;
+    } else if (left < right) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
+
+  const updateWizards = function () {
+    addWizard(wizards.sort(function (left, right) {
+      let rankDiff = window.colorize.getRank(right) - window.colorize.getRank(left);
+      if (rankDiff === 0) {
+        rankDiff = namesComparator(left.name, right.name);
+      }
+      return rankDiff;
+    }));
+  };
+
+  const successHandler = function (data) {
+    wizards = data;
+    window.debounce(window.renderWizard.updateWizards());
   };
 
   const createUserMessage = function (color, userMessage) {
@@ -62,4 +84,8 @@
   };
 
   window.backend.load(successHandler, errorHandler);
+
+  window.renderWizard = {
+    updateWizards
+  };
 })();
